@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import API_BASE_URL from '../config/api'
 import './Ordenes.css'
 
 const Ordenes = () => {
@@ -19,7 +20,7 @@ const Ordenes = () => {
       setError(null)
       
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:3000/api/pagos/ordenes', {
+      const response = await fetch(`${API_BASE_URL}/pagos/ordenes`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

@@ -1,0 +1,170 @@
+═══════════════════════════════════════════════════════════════
+🚀 COMANDOS PARA DESPLEGAR FRONTEND EN RENDER
+═══════════════════════════════════════════════════════════════
+
+Tu Backend: https://juanflores200-4.onrender.com/
+
+═══════════════════════════════════════════════════════════════
+OPCIÓN RECOMENDADA: TODO-EN-UNO (Más Simple)
+═══════════════════════════════════════════════════════════════
+
+1️⃣ SUBIR CAMBIOS A GITHUB:
+───────────────────────────────────────────────────────────────
+git add .
+git commit -m "Configurar frontend para Render"
+git push origin main
+
+
+2️⃣ ACTUALIZAR TU SERVICIO BACKEND EN RENDER:
+───────────────────────────────────────────────────────────────
+a) Ve a: https://dashboard.render.com/
+b) Click en tu servicio: "juanflores200-4"
+c) Ve a "Settings"
+d) Cambia "Build Command" a:
+
+npm install && npm run build
+
+e) Verifica que "Start Command" sea:
+
+npm start
+
+f) En "Environment Variables" asegúrate de tener:
+
+NODE_ENV=production
+JWT_SECRET=tu_secreto_jwt_aqui
+PORT=3000
+
+g) Click en "Save Changes"
+
+
+3️⃣ ESPERAR EL REDESPLIEGUE:
+───────────────────────────────────────────────────────────────
+- Render redesplegará automáticamente (5-10 minutos)
+- Tu app completa estará en: https://juanflores200-4.onrender.com
+
+
+4️⃣ CREAR USUARIO ADMINISTRADOR:
+───────────────────────────────────────────────────────────────
+a) En Render Dashboard → Tu servicio → "Shell"
+b) Ejecuta este comando (todo en una línea):
+
+node -e "const db=require('./src/config/database');const bcrypt=require('bcryptjs');const pwd=bcrypt.hashSync('admin123',10);db.prepare('INSERT INTO usuarios (nombre,email,password,nivel) VALUES (?,?,?,?)').run('Admin','admin@tuapp.com',pwd,'admin');console.log('Admin creado');"
+
+c) Credenciales:
+   Email: admin@tuapp.com
+   Password: admin123
+
+
+═══════════════════════════════════════════════════════════════
+ALTERNATIVA: FRONTEND SEPARADO (Static Site)
+═══════════════════════════════════════════════════════════════
+
+1️⃣ SUBIR CAMBIOS:
+───────────────────────────────────────────────────────────────
+git add .
+git commit -m "Configurar frontend para Render"
+git push origin main
+
+
+2️⃣ CREAR STATIC SITE EN RENDER:
+───────────────────────────────────────────────────────────────
+a) Ve a: https://dashboard.render.com/
+b) Click "New +" → "Static Site"
+c) Conecta tu repositorio
+d) Configura:
+
+Name: ecommerce-frontend
+Branch: main
+Build Command: cd frontend && npm install && npm run build
+Publish Directory: frontend/dist
+
+e) Environment Variables:
+
+VITE_API_URL=https://juanflores200-4.onrender.com/api
+
+f) Redirects/Rewrites (en Advanced):
+
+Source: /*
+Destination: /index.html
+Action: Rewrite
+
+g) Click "Create Static Site"
+
+
+═══════════════════════════════════════════════════════════════
+✅ VERIFICACIÓN
+═══════════════════════════════════════════════════════════════
+
+Después del despliegue:
+
+1. Abre tu app en el navegador
+2. Deberías ver la página de login
+3. Registra un usuario nuevo
+4. Verifica que se vean los productos con imágenes
+5. Prueba agregar productos al carrito
+6. Inicia sesión como admin (admin@tuapp.com / admin123)
+7. Verifica el panel de administración
+
+
+═══════════════════════════════════════════════════════════════
+🐛 PROBLEMAS COMUNES
+═══════════════════════════════════════════════════════════════
+
+❌ "Failed to fetch" o errores de red:
+   → Verifica que el backend esté corriendo (verde en Render)
+   → Abre la consola del navegador (F12) para ver el error exacto
+
+❌ Error de CORS:
+   → En tu backend, agrega variable de entorno:
+     FRONTEND_URL=https://tu-frontend.onrender.com
+   → Redesplega el backend
+
+❌ Página en blanco:
+   → Revisa los logs del build en Render
+   → Verifica que frontend/dist se haya creado
+
+❌ Base de datos vacía:
+   → Es normal, se resetea en cada deploy
+   → Vuelve a crear el usuario admin
+
+
+═══════════════════════════════════════════════════════════════
+📝 NOTAS IMPORTANTES
+═══════════════════════════════════════════════════════════════
+
+⚠️  Plan Gratuito: El servicio se duerme después de 15 minutos
+    La primera carga puede tardar 30-60 segundos
+
+⚠️  Base de Datos: SQLite se resetea en cada deploy
+    Necesitarás recrear el admin después de cada deploy
+
+✅  HTTPS: Incluido automáticamente
+
+✅  Auto-Deploy: Se redespliega con cada push a main
+
+
+═══════════════════════════════════════════════════════════════
+📋 CHECKLIST
+═══════════════════════════════════════════════════════════════
+
+□ Código subido a GitHub
+□ Build Command actualizado en Render
+□ Variables de entorno configuradas
+□ Servicio redesplegado exitosamente
+□ App carga correctamente
+□ Usuario admin creado
+□ Login funciona
+□ Productos se ven con imágenes
+□ Carrito funciona
+□ Panel admin funciona
+
+
+═══════════════════════════════════════════════════════════════
+🎉 ¡LISTO!
+═══════════════════════════════════════════════════════════════
+
+Tu app estará disponible en:
+https://juanflores200-4.onrender.com
+
+API disponible en:
+https://juanflores200-4.onrender.com/api

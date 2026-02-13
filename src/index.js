@@ -19,12 +19,21 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || '*',
+  credentials: true
+}));
 
 // Webhook Stripe debe recibir body raw (antes de express.json())
 app.post('/api/pagos/webhook-stripe', express.raw({ type: 'application/json' }), webhookStripe);
 
 app.use(express.json());
+
+// Servir archivos estáticos del frontend en producción
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
+}
+
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Rutas API
@@ -47,10 +56,17 @@ app.get('/', (req, res) => {
   });
 });
 
-// Manejo de errores 404
-app.use((req, res) => {
+// Manejo de errores 404 para API
+app.use('/api/*', (req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
 });
+
+// Servir el frontend para todas las demás rutas en producción
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'dist', 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Servidor ejecutándose en http://localhost:${PORT}`);

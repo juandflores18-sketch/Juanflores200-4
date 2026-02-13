@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useCarrito } from '../contexts/CarritoContext'
 import { useAuth } from '../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import API_BASE_URL from '../config/api'
 import paymentImage from '../assets/istockphoto-919525494-612x612.jpg'
 import paymentIcons from '../assets/royalty-payment-icon-set-multiple-260nw-2595735841.webp'
 import './Pagos.css'
@@ -28,7 +29,7 @@ const Pagos = () => {
       setError(null)
       
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:3000/api/pagos/crear-sesion', {
+      const response = await fetch(`${API_BASE_URL}/pagos/crear-sesion`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -56,7 +57,7 @@ const Pagos = () => {
       setError(null)
       
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:3000/api/pagos/crear-orden-paypal', {
+      const response = await fetch(`${API_BASE_URL}/pagos/crear-orden-paypal`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -89,7 +90,7 @@ const Pagos = () => {
       setError(null)
       
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:3000/api/pagos/confirmar', {
+      const response = await fetch(`${API_BASE_URL}/pagos/confirmar`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

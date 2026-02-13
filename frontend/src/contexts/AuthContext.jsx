@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
+import API_BASE_URL from '../config/api'
 
 const AuthContext = createContext()
 
@@ -16,8 +17,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const API_BASE = 'http://localhost:3000/api'
-
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
@@ -30,7 +29,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.get(`${API_BASE}/auth/perfil`)
+      const response = await axios.get(`${API_BASE_URL}/auth/perfil`)
       setUser(response.data)
       setLoading(false)
     } catch (error) {
@@ -43,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       setError(null)
-      const response = await axios.post(`${API_BASE}/auth/login`, { email, password })
+      const response = await axios.post(`${API_BASE_URL}/auth/login`, { email, password })
       const { token, usuario } = response.data
       
       localStorage.setItem('token', token)
@@ -60,7 +59,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (nombre, email, password, nivel = 'usuario') => {
     try {
       setError(null)
-      const response = await axios.post(`${API_BASE}/auth/registro`, { nombre, email, password, nivel })
+      const response = await axios.post(`${API_BASE_URL}/auth/registro`, { nombre, email, password, nivel })
       const { token, usuario } = response.data
       
       localStorage.setItem('token', token)

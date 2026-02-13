@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useCarrito } from '../contexts/CarritoContext'
 import axios from 'axios'
+import API_BASE_URL from '../config/api'
 import './Productos.css'
 
 const Productos = () => {
@@ -20,7 +21,7 @@ const Productos = () => {
   const fetchProductos = async () => {
     try {
       setLoading(true)
-      const response = await axios.get('http://localhost:3000/api/productos')
+      const response = await axios.get(`${API_BASE_URL}/productos`)
       setProductos(response.data)
     } catch (error) {
       setError(error.response?.data?.error || 'Error al cargar productos')

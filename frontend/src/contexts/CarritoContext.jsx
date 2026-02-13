@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import API_BASE_URL from '../config/api'
 
 const CarritoContext = createContext()
 
@@ -14,8 +15,6 @@ export const CarritoProvider = ({ children }) => {
   const [carrito, setCarrito] = useState({ items: [], total: 0 })
   const [loading, setLoading] = useState(false)
 
-  const API_BASE = 'http://localhost:3000/api'
-
   useEffect(() => {
     fetchCarrito()
   }, [])
@@ -26,7 +25,7 @@ export const CarritoProvider = ({ children }) => {
       const token = localStorage.getItem('token')
       if (!token) return
 
-      const response = await fetch(`${API_BASE}/carrito`, {
+      const response = await fetch(`${API_BASE_URL}/carrito`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -49,7 +48,7 @@ export const CarritoProvider = ({ children }) => {
       const token = localStorage.getItem('token')
       if (!token) throw new Error('No autenticado')
 
-      const response = await fetch(`${API_BASE}/carrito`, {
+      const response = await fetch(`${API_BASE_URL}/carrito`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -79,7 +78,7 @@ export const CarritoProvider = ({ children }) => {
       const token = localStorage.getItem('token')
       if (!token) throw new Error('No autenticado')
 
-      const response = await fetch(`${API_BASE}/carrito/${itemId}`, {
+      const response = await fetch(`${API_BASE_URL}/carrito/${itemId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -105,7 +104,7 @@ export const CarritoProvider = ({ children }) => {
       const token = localStorage.getItem('token')
       if (!token) throw new Error('No autenticado')
 
-      const response = await fetch(`${API_BASE}/carrito`, {
+      const response = await fetch(`${API_BASE_URL}/carrito`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`

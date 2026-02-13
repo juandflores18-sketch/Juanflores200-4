@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
+import API_BASE_URL from '../config/api'
 import './AdminProductos.css'
 
 const AdminProductos = () => {
@@ -31,7 +32,7 @@ const AdminProductos = () => {
       setError(null)
       
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:3000/api/productos', {
+      const response = await fetch(`${API_BASE_URL}/productos`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -63,8 +64,8 @@ const AdminProductos = () => {
     try {
       const token = localStorage.getItem('token')
       const url = editingProduct 
-        ? `http://localhost:3000/api/productos/${editingProduct.codigo}`
-        : 'http://localhost:3000/api/productos'
+        ? `${API_BASE_URL}/productos/${editingProduct.codigo}`
+        : `${API_BASE_URL}/productos`
       
       const method = editingProduct ? 'PUT' : 'POST'
       
@@ -120,7 +121,7 @@ const AdminProductos = () => {
 
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:3000/api/productos/${codigo}`, {
+      const response = await fetch(`${API_BASE_URL}/productos/${codigo}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
