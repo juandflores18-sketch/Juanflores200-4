@@ -1,0 +1,147 @@
+.ordenes-container {
+  padding: 2rem 0;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.ordenes-header {
+  margin-bottom: 2rem;
+}
+
+.ordenes-header h1 {
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.ordenes-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.empty-ordenes {
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.empty-ordenes h3 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.empty-ordenes p {
+  color: #666;
+}
+
+.ordenes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.orden-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.orden-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+.orden-header h3 {
+  color: #333;
+  font-size: 1.25rem;
+}
+
+.orden-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+
+.orden-fecha {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.orden-estado {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.orden-estado.completada {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.orden-estado.pendiente {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.orden-estado.cancelada {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.orden-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.orden-item {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 1rem;
+  padding: 0.75rem;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.item-nombre {
+  font-weight: 500;
+  color: #333;
+}
+
+.item-cantidad {
+  color: #666;
+}
+
+.item-precio {
+  color: #007bff;
+  font-weight: 500;
+}
+
+.item-subtotal {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.orden-total {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 2px solid #eee;
+}
+
+.orden-total strong {
+  font-size: 1.25rem;
+  color: #333;
+}

@@ -1,0 +1,155 @@
+.carrito-container {
+  padding: 2rem 0;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.carrito-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.carrito-header h1 {
+  color: #000000;
+  font-size: 2rem;
+}
+
+.clear-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.clear-btn:hover {
+  background-color: #c82333;
+}
+
+.empty-carrito {
+  text-align: center;
+  padding: 3rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.empty-carrito h3 {
+  color: #000000;
+  margin-bottom: 1rem;
+}
+
+.empty-carrito p {
+  color: #000000;
+  margin-bottom: 2rem;
+}
+
+.carrito-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.carrito-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.carrito-item:hover {
+  transform: translateX(4px);
+}
+
+.item-info h3 {
+  color: #000000;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.item-codigo {
+  color: #000000;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.item-precio {
+  color: #000000;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.item-subtotal {
+  color: #000000;
+  font-weight: bold;
+}
+
+.item-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.item-cantidad {
+  color: #000000;
+  font-weight: 500;
+}
+
+.remove-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.remove-btn:hover {
+  background-color: #c82333;
+}
+
+.remove-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.carrito-resumen {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.resumen-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #eee;
+}
+
+.resumen-total h3 {
+  color: #000000;
+  font-size: 1.5rem;
+}
+
+.carrito-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}

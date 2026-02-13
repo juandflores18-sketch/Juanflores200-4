@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagos - E-Commerce</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; max-width: 560px; margin: 2rem auto; padding: 0 1rem; }
+    h1 { font-size: 1.5rem; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+    input, button { padding: 0.5rem 0.75rem; margin: 0.25rem 0; width: 100%; }
+    button { cursor: pointer; background: #0d6efd; color: #fff; border: none; border-radius: 6px; font-size: 1rem; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    button.secondary { background: #6c757d; }
+    .token-row { display: flex; gap: 0.5rem; align-items: center; }
+    .token-row input { flex: 1; }
+    #historial { list-style: none; padding: 0; }
+    #historial li { border-bottom: 1px solid #eee; padding: 0.75rem 0; }
+    .total { font-weight: bold; }
+    .error { color: #c00; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>Pagos</h1>
+
+  <div class="card">
+    <label>Token (Bearer)</label>
+    <div class="token-row">
+      <input type="password" id="token" placeholder="Pega tu token después de hacer login">
+      <button type="button" class="secondary" id="btnGuardarToken">Guardar</button>
+    </div>
+    <p class="error" id="tokenError"></p>
+  </div>
+
+  <div class="card">
+    <h2>Pagar con Stripe</h2>
+    <p>El carrito se cobrará en Stripe Checkout. Al confirmar el pago, la orden se guarda y el carrito se vacía.</p>
+    <button type="button" id="btnStripe">Pagar con Stripe</button>
+    <p class="error" id="stripeError"></p>
+  </div>
+
+  <div class="card">
+    <h2>Pagar con PayPal (Sandbox)</h2>
+    <p>Redirige a PayPal para pagar. Al volver, se captura el pago y se guarda la orden.</p>
+    <button type="button" id="btnPayPal">Pagar con PayPal</button>
+    <p class="error" id="paypalError"></p>
+  </div>
+
+  <div class="card">
+    <h2>Mi historial de compras</h2>
+    <button type="button" class="secondary" id="btnHistorial">Ver historial</button>
+    <ul id="historial"></ul>
+  </div>
+
+  <script>
+    const API = window.location.origin;
+    const tokenKey = 'ecommerce_token';
+
+    function getToken() {
+      return localStorage.getItem(tokenKey) || document.getElementById('token').value.trim();
+    }
+
+    document.getElementById('btnGuardarToken').onclick = () => {
+      const t = document.getElementById('token').value.trim();
+      if (!t) { document.getElementById('tokenError').textContent = 'Escribe un token'; return; }
+      localStorage.setItem(tokenKey, t);
+      document.getElementById('tokenError').textContent = 'Token guardado.';
+      setTimeout(() => { document.getElementById('tokenError').textContent = ''; }, 2000);
+    };
+
+    document.getElementById('btnStripe').onclick = async () => {
+      const token = getToken();
+      const errEl = document.getElementById('stripeError');
+      errEl.textContent = '';
+      if (!token) { errEl.textContent = 'Necesitas un token. Haz login y pega el token aquí.'; return; }
+
+      document.getElementById('btnStripe').disabled = true;
+      try {
+        const r = await fetch(API + '/api/pagos/crear-sesion', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+        });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) {
+          errEl.textContent = data.error || 'Error al crear sesión de pago';
+          return;
+        }
+        if (data.url) {
+          window.location.href = data.url;
+          return;
+        }
+        errEl.textContent = 'No se recibió URL de pago';
+      } finally {
+        document.getElementById('btnStripe').disabled = false;
+      }
+    };
+
+    document.getElementById('btnPayPal').onclick = async () => {
+      const token = getToken();
+      const errEl = document.getElementById('paypalError');
+      errEl.textContent = '';
+      if (!token) { errEl.textContent = 'Necesitas un token. Haz login y pega el token aquí.'; return; }
+      document.getElementById('btnPayPal').disabled = true;
+      try {
+        const r = await fetch(API + '/api/pagos/crear-orden-paypal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+        });
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) { errEl.textContent = data.error || 'Error PayPal'; return; }
+        if (data.approvalUrl) { window.location.href = data.approvalUrl; return; }
+        errEl.textContent = 'No se recibió URL de PayPal';
+      } finally { document.getElementById('btnPayPal').disabled = false; }
+    };
+
+    // Al volver de PayPal: capturar y guardar orden
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('paypal_approved') === '1' && params.get('token')) {
+      const token = getToken();
+      if (token) {
+        const errEl = document.getElementById('paypalError');
+        fetch(API + '/api/pagos/capturar-paypal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ orderId: params.get('token') })
+        })
+          .then(r => r.json())
+          .then(data => {
+            if (data.mensaje) { errEl.style.color = 'green'; errEl.textContent = data.mensaje; }
+            else { errEl.textContent = data.error || 'Error'; }
+            history.replaceState({}, '', window.location.pathname);
+          })
+          .catch(() => { errEl.textContent = 'Error al capturar pago'; });
+      }
+    }
+
+    document.getElementById('btnHistorial').onclick = async () => {
+      const token = getToken();
+      const ul = document.getElementById('historial');
+      ul.innerHTML = '<li>Cargando…</li>';
+      if (!token) { ul.innerHTML = '<li class="error">Necesitas un token para ver el historial.</li>'; return; }
+
+      try {
+        const r = await fetch(API + '/api/pagos/ordenes', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const ordenes = await r.json();
+        if (!r.ok) {
+          ul.innerHTML = '<li class="error">' + (ordenes.error || 'Error al cargar') + '</li>';
+          return;
+        }
+        if (!ordenes.length) {
+          ul.innerHTML = '<li>No tienes compras aún.</li>';
+          return;
+        }
+        ul.innerHTML = ordenes.map(o => `
+          <li>
+            <strong>Orden #${o.id}</strong> — ${new Date(o.creado_en).toLocaleString()}<br>
+            Total: $${Number(o.total).toFixed(2)} — ${o.estado}
+            ${(o.items || []).map(i => `<br><small>${i.producto_codigo} x${i.cantidad} = $${Number(i.subtotal).toFixed(2)}</small>`).join('')}
+          </li>
+        `).join('');
+      } catch (e) {
+        ul.innerHTML = '<li class="error">Error de red</li>';
+      }
+    };
+  </script>
+</body>
+</html>
