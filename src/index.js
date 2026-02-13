@@ -42,8 +42,8 @@ app.use('/api/productos', productosRoutes);
 app.use('/api/carrito', carritoRoutes);
 app.use('/api/pagos', pagosRoutes);
 
-// Ruta principal
-app.get('/', (req, res) => {
+// Ruta principal - API info solo si no es producción
+app.get('/api', (req, res) => {
   res.json({
     mensaje: 'API E-Commerce - Programación III',
     version: '1.0.0',
