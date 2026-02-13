@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "node src/index.js",
-    "build": "cd frontend && npm install && npm run build"
+    "build": "cd frontend && npm install --production=false && npm run build"
   },
   "keywords": [
     "nodejs",
